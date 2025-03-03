@@ -1,6 +1,6 @@
 body {
   font-family: 'Arial', sans-serif;
-  background-color: pink;
+  background-color: #FFD1DC;
   text-align: center;
   overflow: hidden;
 }
@@ -9,6 +9,7 @@ h1 {
   color: #ff6347;
   font-size: 3rem;
   margin-bottom: 20px;
+  font-family: 'Fredoka One', cursive;
 }
 
 .cake {
@@ -45,7 +46,7 @@ box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3), /* General shadow */
   height: 100px;
   border-radius: 50%;
   background-color: #f0c27b;
-  color: #553c13
+  color: pink
 }
 
 .layer-top { top: 0px; }
@@ -202,7 +203,7 @@ box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3), /* General shadow */
   height: 50px;
   background-color: red;
   border-radius: 50%;
-  animation: rise 60s linear infinite;
+  animation: rise linear infinite;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transition: bottom 10s linear, opacity 2s ease-in;
 }
