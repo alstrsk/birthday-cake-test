@@ -1,120 +1,67 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const cake = document.querySelector(".cake");
-  const candleCountDisplay = document.getElementById("candleCount");
-  let candles = [];
-  let audioContext;
-  let analyser;
-  let microphone;
-  let audio = new Audio('hbd.mp3');
+function celebrate() {
+  const age = document.getElementById("ageInput").value;
+  const balloonContainer = document.getElementById("balloon-container");
+  const confettiContainer = document.getElementById("confetti-container");
 
+  // Clear previous balloons and confetti
+  balloonContainer.innerHTML = "";
+  confettiContainer.innerHTML = "";
 
-  function updateCandleCount() {
-    const activeCandles = candles.filter(
-      (candle) => !candle.classList.contains("out")
-    ).length;
-    candleCountDisplay.textContent = activeCandles;
-  }
-
-  function addCandle(left, top) {
-    const candle = document.createElement("div");
-    candle.className = "candle";
-    candle.style.left = left + "px";
-    candle.style.top = top + "px";
-
-    const flame = document.createElement("div");
-    flame.className = "flame";
-    candle.appendChild(flame);
-
-    cake.appendChild(candle);
-    candles.push(candle);
-    updateCandleCount();
-  }
-
-  cake.addEventListener("click", function (event) {
-    const rect = cake.getBoundingClientRect();
-    const left = event.clientX - rect.left;
-    const top = event.clientY - rect.top;
-    addCandle(left, top);
-  });
-
-  function isBlowing() {
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    analyser.getByteFrequencyData(dataArray);
-
-    let sum = 0;
-    for (let i = 0; i < bufferLength; i++) {
-      sum += dataArray[i];
-    }
-    let average = sum / bufferLength;
-
-    return average > 50; //ETO CHANGEEEEEE
-  }
-
-  function blowOutCandles() {
-    let blownOut = 0;
-
-    // Only check for blowing if there are candles and at least one is not blown out
-    if (candles.length > 0 && candles.some((candle) => !candle.classList.contains("out"))) {
-      if (isBlowing()) {
-        candles.forEach((candle) => {
-          if (!candle.classList.contains("out") && Math.random() > 0.5) {
-            candle.classList.add("out");
-            blownOut++;
-          }
-        });
+  if (age && age > 0) {
+      for (let i = 0; i < age; i++) {
+          createBalloon();
+          createConfetti();
       }
 
-      if (blownOut > 0) {
-        updateCandleCount();
-      }
-
-      // If all candles are blown out, trigger confetti after a small delay
-      if (candles.every((candle) => candle.classList.contains("out"))) {
-        setTimeout(function() {
-          triggerConfetti();
-          endlessConfetti(); // Start the endless confetti
-        }, 200);
-        audio.play();
-      }
-    }
-  }
-
-
-
-  if (navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(function (stream) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        microphone = audioContext.createMediaStreamSource(stream);
-        microphone.connect(analyser);
-        analyser.fftSize = 256;
-        setInterval(blowOutCandles, 200);
-      })
-      .catch(function (err) {
-        console.log("Unable to access microphone: " + err);
-      });
+      // Play the birthday song
+      const birthdaySong = document.getElementById("birthdaySong");
+      birthdaySong.play();
   } else {
-    console.log("getUserMedia not supported on your browser!");
+      alert("Please enter a valid age.");
   }
-});
-
-function triggerConfetti() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
 }
 
-function endlessConfetti() {
-  setInterval(function() {
-    confetti({
-      particleCount: 200,
-      spread: 90,
-      origin: { y: 0 }
-    });
-  }, 1000);
+// Create a single balloon
+function createBalloon() {
+  const balloon = document.createElement("div");
+  balloon.classList.add("balloon");
+
+  // Random colors
+  const colors = ["red", "blue", "yellow", "green", "purple", "orange"];
+  balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+  // Random positioning
+  balloon.style.left = Math.random() * 100 + "vw";
+  balloon.style.animationDuration = Math.random() * 3 + 3 + "s";
+
+  document.getElementById("balloon-container").appendChild(balloon);
+
+  // Remove balloon after animation
+  setTimeout(() => {
+      balloon.remove();
+  }, 5000);
+}
+
+// Create confetti
+function createConfetti() {
+  for (let i = 0; i < 15; i++) { // More confetti
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+
+      // Random colors
+      const colors = ["red", "blue", "yellow", "green", "purple", "pink"];
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+      // Random positioning
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.top = Math.random() * 100 + "vh";
+      confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
+
+      document.getElementById("confetti-container").appendChild(confetti);
+
+      // Remove confetti after animation
+      setTimeout(() => {
+          confetti.remove();
+      }, 3000);
+  }
 }
